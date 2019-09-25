@@ -7,7 +7,7 @@ This program calculates the auto-correlation of
 a series of numbers (*x(i)*) from a text file
 (which may contain one or more lists of scalars or vectors).
 It prints the correlation function,
-*C(j) = ⟨x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩)⟩*,
+C(j) = ⟨x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩)⟩,
 as a function of j, to the standard output, where ⟨⟩ denotes the
 [average](https://en.wikipedia.org/wiki/Average#Arithmetic_mean).
 
