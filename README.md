@@ -3,21 +3,13 @@
 ndautocrr
 ===========
 
-This is a program to calculate the auto-correlation of
-n-dimensional numeric data from a text file
+This program calculates the auto-correlation of
+a series of numbers (*x(i)*) from a text file
 (which may contain scalars or vectors).
-It prints the correlation,
-function C(j) = < (x(i)-<x>)⋅(x(i+j)-<x>) >,
-as a function of j
-```
-                                           __N__
-                                       1   \
- C(j) = < (x(i)-<x>)⋅(x(i+j)-<x>) > = ---   >    (x(i)-<x>)⋅(x((i+j % N)-<x>)
-                                       N   /____
-                                            i=1
-```
-The ⋅ operator denotes the simple
-[inner-product (dot-product)](https://en.wikipedia.org/wiki/Dot_product).
+It prints the correlation function,
+*C(j) = \<(x(i)-\<x\>)⋅(x(i+j)-\<x\>)\>*,
+as a function of j, to the standard output, where \< \> denotes the average.
+
 
 ### Output file format:
 By default, this information is printed to the standard output (terminal)
@@ -64,8 +56,8 @@ x2 y2 z2
 :  :  :
 xN2 yN2 zN2
 ```
-
-
+*When the input file contains multiple data sets, the sum used when computing averages weights each entry (each line in the file) equally.*
+*Comments in the input stream (following the \# character) are ignored.*
 
 ## Usage:
 
@@ -86,20 +78,10 @@ ndautocrr [-L domainwidth] [-p] [-t threshold] [-ave,-avezero] \
 
 2. The data entries *x(i)* can be scalar values or vectors.
 When they are vectors, the
-[inner-product (dot-product)](https://en.wikipedia.org/wiki/Dot_product)
+[dot-product](https://en.wikipedia.org/wiki/Dot_product)
 is used.
 
-3. For convenience, the correlation length (or correlation time)
-is printed to the standard error:
-```
-                                   __ L __
-                                   \         C(j)
-  correlation length (or time) =    >      ------
-                                   /______   C(0)
-                                     j=0
-```
-
-
+3. For convenience, the correlation length (also called the correlation time, *(1/C(0)\sum C(j))* is printed to the standard error:  
 
 
 ## Optional arguments
@@ -125,7 +107,7 @@ By default, L is N/2, where N is the number of entries in the
 list (we throw away the fractional part of N/2).  But you can
 override this choice and force L to be any number in the range
 from 0 to N-1.  A low value of L can speed speed up the program
-since the running time is O(N*L).  (Note:  If L approaches or
+since the running time is O(N\*L).  (Note:  If L approaches or
 exceeds N, a warning message will be generated.)
 
 ### -t threshold
@@ -182,16 +164,18 @@ over all of them, and C(j) is normalized accordingly.)
 Report an additional column in the output file (after C(j)) storing the number of entries in the sum that was used to calculate C(j).  *(If there is only one data set, this is N-j, where "N" is the size of that data set.  If multiple data sets were used, then this is is sum_k max(0,N_k-j)), where N_k denotes the number of entries in the kth data set.)*
 
 ### -rms
-Report an additional column in the output file (after C(j)) storing the root-mean-squared value of (x(i)-<x>)\*(x(i+j)-<x>), (considering various values of i, for a given j).*(It is not clear to me whether this quantity is ever useful.)*
+Report an additional column in the output file (after C(j)) storing the root-mean-squared value of (x(i)-<x>)⋅(x(i+j)-<x>), (considering various values of i, for a given j).*(It is not clear to me whether this quantity is ever useful.)*
 
 
 ## Compilation
 
 ## Linux and Apple macOS:
 
-    cd src
-    source setup_gcc.sh
-    make
+```
+cd src
+source setup_gcc.sh
+make
+```
 
 *(Note:  If you are not using the bash shell,
 enter "bash" into the terminal beforehand.)*
