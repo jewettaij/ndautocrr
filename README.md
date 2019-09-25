@@ -25,15 +25,16 @@ L C(L)
 The domain-length, *L*, is chosen automatically, but can be specified
 using the "-L" and "-t" arguments.
 
-Multiprocessor support was implemented using
-[OpenMP.](https://en.wikipedia.org/wiki/OpenMP)
-
 *This was originally a crude program written to analyze polymer simulation
 trajectory files.  I find myself referring to it frequently in some of the
 [moltemplate](https://github.com/jewettaij/moltemplate)
 examples, so I was forced to make this ugly code available.*
 *This program could probably be implemented
 using only a couple lines in python.*
+
+Multiprocessor support was implemented using
+[OpenMP.](https://en.wikipedia.org/wiki/OpenMP)
+
 
 ### Input file format:
 
