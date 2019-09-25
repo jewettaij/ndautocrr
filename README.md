@@ -40,12 +40,10 @@ Multiprocessor support was implemented using
 
 The text files read by this program may contain multiple sets of data
 (delimited by white space, see example below).
-
 The input file should be a text file containing 1 data entry per line,
 and blank lines separating different data sets.
-
-The example above has 2 data sets with 3 columns per entry,
-but any number of columns is allowed.
+The example below has 2 data sets with 3 columns per entry
+(but any number of columns is allowed).
 ```
 x1 y1 z1     #<--1st dataset
 x2 y2 z2
@@ -82,7 +80,7 @@ When they are vectors, the
 [dot-product](https://en.wikipedia.org/wiki/Dot_product)
 is used.
 
-3. For convenience, the correlation length (also called the correlation time, *(1/C(0)\sum C(j))* is printed to the standard error:  
+3. For convenience, the correlation length (also called the correlation time, *(sum_j C(j)/C(0))* is printed to the standard error:  
 
 
 ## Optional arguments
@@ -95,6 +93,7 @@ At some point, one must make a decision where to truncate C(j).
 You can either do this by manually specifying the maximum value
 of j (using the "domainwidth" argument to directly specify L),
 and/or by using a threshold cutoff ("-t").
+
 
 ### -L domainwidth
 
@@ -110,6 +109,7 @@ override this choice and force L to be any number in the range
 from 0 to N-1.  A low value of L can speed speed up the program
 since the running time is O(N\*L).  (Note:  If L approaches or
 exceeds N, a warning message will be generated.)
+
 
 ### -t threshold
 
@@ -129,10 +129,12 @@ length/time only considers terms C(j) which exceed this threshold.
 NOTE: USE "-t -1" IF YOU WANT TO DISABLE THRESHOLDING BEHAVIOR.
 IN THAT CASE THE DEFAULT VALUE OF L IS N/2.
 
+
 ### -ave
 
 This means subtract the average before calculating the
 correlation function C(j).  (This is the default behavior.)
+
 
 ### -avezero
 
@@ -144,10 +146,13 @@ average turns out not to be zero due to statistical fluctuations.  In this
 case you can force the average to be zero using the "-avezero"
 argument.
 
+
 ### -p
 
 If you pass the "-p" flag, then periodic boundary conditions
-are applied to the data:
+are applied to the data.
+That means *(in the simple case, for a single data set of length N)*
+the correlation function, C(j), is computed this way:
 ```
                                            __N__
                                        1   \
@@ -156,13 +161,14 @@ are applied to the data:
                                             i=1
 ```
 Here, "(i+j) % N" denotes the remainder after division by N.
-(N is the number of entries in each data set,
-which are assumed to be the same size.
-If multiple data sets are used, then the sum continues
-over all of them, and C(j) is normalized accordingly.)
+(N is the number of entries in that data set.)
+*(As before, if multiple data sets are used, 
+  then we sum over all of them when performing the average.)*
+
 
 ### -nsum
 Report an additional column in the output file (after C(j)) storing the number of entries in the sum that was used to calculate C(j).  *(If there is only one data set, this is N-j, where "N" is the size of that data set.  If multiple data sets were used, then this is is sum_k max(0,N_k-j)), where N_k denotes the number of entries in the kth data set.)*
+
 
 ### -rms
 Report an additional column in the output file (after C(j)) storing the root-mean-squared value of (x(i)-<x>)⋅(x(i+j)-<x>), (considering various values of i, for a given j).*(It is not clear to me whether this quantity is ever useful.)*

@@ -67,6 +67,7 @@ public:
     }
   }
 
+
   /// @brief  Return the size of the vC[j] array (or at least the portion
   ///         of which we care about).
   size_t size() const { assert(L <= vC.size()); return L; }
@@ -77,9 +78,8 @@ public:
   Accumulate(const vector<vector<vector<Scalar> > > &vvvX_nid, //!< series of data points (each is a vector of dimension d)
              ostream *pReportProgress = nullptr)  //!< print progress to the user?
   {
-    for (int n=0; n < vvvX_nid.size(); n++) {
+    for (int n=0; n < vvvX_nid.size(); n++)
       AccumulateSingle(vvvX_nid[n], pReportProgress);
-    }
     return L;
   }
 
@@ -91,13 +91,13 @@ public:
                    ostream *pReportProgress = nullptr)  //!< print progress to the user?
   {
     vector<vector<Scalar> > _vvX_id = vvX_id; //make a local copy of the data set
-    size_t N = _vvX_id.size();
-    size_t L_orig = L;
-    L = ChooseL(N, L_orig);
+    size_t L_single = _vvX_id.size();
+    ChooseL(L_single);
+
     vector<Scalar> x_ave;
 
     int D = 0;
-    for (size_t i=0; i < N; i++) {
+    for (size_t i=0; i < _vvX_id.size(); i++) {
       if (i == 0) 
         D = _vvX_id[i].size();
       else if (D != _vvX_id[i].size())
@@ -110,14 +110,14 @@ public:
 
       // If so, then ...
       x_ave.resize(D, 0.0);
-      for (size_t i=0; i < N; i++)
+      for (size_t i=0; i < _vvX_id.size(); i++)
         for (size_t d=0; d < D; d++)
           x_ave[d] += _vvX_id[i][d];
       for (size_t d=0; d < D; d++)
-        x_ave[d] /= N;
+        x_ave[d] /= _vvX_id.size();
 
       // subtract the average value
-      for (size_t i=0; i < N; ++i)
+      for (size_t i=0; i < _vvX_id.size(); ++i)
         for (size_t d=0; d < D; d++)
         _vvX_id[i][d] - x_ave[d];
     }
@@ -133,12 +133,12 @@ public:
         {
           if (pReportProgress)
             *pReportProgress << "#    processing separation " << j << endl;
-          for (size_t i=0; i < N; ++i)
+          for (size_t i=0; i < _vvX_id.size(); ++i)
           {
             size_t iplusj = i+j;
-            if (iplusj >= N) 
-              iplusj -= N;
-            assert((0 <= iplusj) && (iplusj < N));
+            if (iplusj >= _vvX_id.size()) 
+              iplusj -= _vvX_id.size();
+            assert((0 <= iplusj) && (iplusj < _vvX_id.size()));
 
             Scalar C = inner_product(_vvX_id[i], _vvX_id[iplusj]);
             vC[j] += C;
@@ -147,7 +147,7 @@ public:
               vCrms[j] += C*C;
           }
 
-          vNumSamples[j] += N;
+          vNumSamples[j] += _vvX_id.size();
 
           // Check for threshold violations.
           // If the covariance function is too low, then quit
@@ -171,7 +171,7 @@ public:
         {
           if (pReportProgress)
             *pReportProgress << "#    processing separation " << j << endl;
-          for (size_t i=0; i < N-j; ++i)
+          for (size_t i=0; i < _vvX_id.size()-j; ++i)
           {
             Scalar C = inner_product(_vvX_id[i], _vvX_id[i+j]);
             vC[j] += C;
@@ -180,7 +180,7 @@ public:
               vCrms[j] += C*C;
           }
 
-          vNumSamples[j] += N-j;
+          vNumSamples[j] += _vvX_id.size()-j;
 
           // Check for threshold violations.
           // If the covariance function is too low, then quit
@@ -261,20 +261,18 @@ private:
   /// @brief  Choose the domain of the correlation function
   ///         C(j) is defined from 0 to L-1
 
-  size_t ChooseL(size_t N, size_t L_orig = -1)
+  size_t ChooseL(size_t L_single)
   {
-    size_t L = L_orig;
-
     if (is_periodic) {
-      if ((L < 0) || (L > N/2))
-        L = N/2; //default value
+      if ((L < 0) || (L > L_single/2))
+        L = L_single/2; //default value
     }
     else
     {
-      if (L<0)
-        L = N/2; // default
-      else if (L > N-1) 
-        L = N-1;
+      if (L == 0)
+        L = L_single/2; // default
+      else if (L > L_single-1) 
+        L = L_single-1;
     } // if (is_periodic)
 
     //if ((vC.size() > L+1) && (! is_periodic))
