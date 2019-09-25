@@ -5,10 +5,12 @@ ndautocrr
 
 This program calculates the auto-correlation of
 a series of numbers (*x(i)*) from a text file
-(which may contain scalars or vectors).
+(which may contain one or more lists of scalars or vectors).
 It prints the correlation function,
-*C(j) = \<(x(i)-\<x\>)⋅(x(i+j)-\<x\>)\>*,
-as a function of j, to the standard output, where \< \> denotes the average.
+*C(j) = ⟨x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩)⟩*,
+as a function of j, to the standard output, where ⟨⟩ denotes the
+[average](https://en.wikipedia.org/wiki/Average#Arithmetic_mean).
+
 
 
 ### Output file format:
@@ -103,10 +105,10 @@ This integer determines the number of lines in the output file
 (See "L" in output file format above.)  L also determines the
 number of terms that will be used to calculate the correlation
 length/time according to the formula shown above.
-By default, L is N/2, where N is the number of entries in the
-list (we throw away the fractional part of N/2).  But you can
-override this choice and force L to be any number in the range
-from 0 to N-1.  A low value of L can speed speed up the program
+By default, L is ⌊N/2⌋, where N is the number of entries in the data set
+(where ⌊⌋ denotes the [floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
+But you can override this choice and force L to be any number in the 
+range from 0 to N-1.  A low value of L can speed speed up the program
 since the running time is O(N\*L).  (Note:  If L approaches or
 exceeds N, a warning message will be generated.)
 
