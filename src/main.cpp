@@ -10,13 +10,13 @@ using namespace std;
 #include "err.hpp"
 
 
+
 // global variables
-const char g_program_name[]   = "autocrr";
+const char g_program_name[]   = "ndautocrr";
 const char g_version_string[] = "0.10.0";
 const char g_date_string[]    = "<2019-9-25>";
 const char *g_spaces = " \t"; // whitespace characters (exluding newlines)
 const char *g_spaces_and_newlines = " \t\n";
-
 
 
 
@@ -79,12 +79,12 @@ main(int argc, char **argv)
         }
         else if (strcmp(argv[i], "-rms")==0)
         {
-          report_rms = false;
+          report_rms = true;
           ndelete = 1;
         }
         else if (strcmp(argv[i], "-nsum")==0)
         {
-          report_nsum = false;
+          report_nsum = true;
           ndelete = 1;
         }
         else if ((strcmp(argv[i], "-t")==0) ||
@@ -245,11 +245,13 @@ main(int argc, char **argv)
 
     cerr << 
       "\n"
-      "#--------------------------------------------\n"
-      "#    correlation length = " << correlation_length << "\n"
-      "#    g = 1 + 2*(correlation length) = "
-         << 1.0 + (2.0*correlation_length)
+      "#--------------------------------------\n"
+      "# correlation length = " << correlation_length
+      // << "\n"
+      //"# g = 1 + 2*(correlation length) = "
+      //   << 1.0 + (2.0*correlation_length)
          << endl;
+
   } // try
   catch (const std::exception& e) {
     cerr << "\n" << e.what() << endl;

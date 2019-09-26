@@ -7,7 +7,7 @@ This program calculates the auto-correlation of
 a series of numbers (*x(i)*) from a text file
 (which may contain one or more lists of scalars or vectors).
 It prints the correlation function,
-C(j) = ⟨x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩)⟩,
+C(j) = ⟨(x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩)⟩,
 as a function of j, to the standard output, where ⟨⟩ denotes the
 [average](https://en.wikipedia.org/wiki/Average#Arithmetic_mean).
 
@@ -106,17 +106,19 @@ This integer determines the number of lines in the output file
 number of terms that will be used to calculate the correlation
 length/time according to the formula shown above.
 By default, L is ⌊N/2⌋, where N is the number of entries in the data set
-(where ⌊⌋ denotes the [floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
-But you can override this choice and force L to be any number in the 
-range from 0 to N-1.  A low value of L can speed speed up the program
-since the running time is O(N\*L).  (Note:  If L approaches or
-exceeds N, a warning message will be generated.)
+(where ⌊⌋ denotes the 
+[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).
+But you can override this choice and force L 
+to be any number in the range from 0 to N-1.
+A low value of L can speed speed up the program 
+since the running time is O(N\*L).  
+(Note:  If L approaches or exceeds N, a warning message will be generated.)
 
 
 ### -t threshold
 
-Again, C(j) will typically decay as j increases.
-Alternatively, you can tell "<<g_program_name<<" to halt when
+Again C(j) will typically decay as j increases.
+Alternatively, you can tell ndautocrr to halt when
 C(j) decays below some threshold that the user has specified.
 the width of the correlation function by using a threshold cutoff.
 (By default this threshold is 0, since in many cases, negative
@@ -158,7 +160,7 @@ the correlation function, C(j), is computed this way:
 ```
                                            __N__
                                        1   \
- C(j) = < (x(i)-<x>)⋅(x(i+j)-<x>) > = ---   >    (x(i)-<x>)⋅(x((i+j % N)-<x>)
+ C(j) = ⟨ (x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩) ⟩ = ---   >    (x(i)-⟨x⟩)⋅(x((i+j % N)-⟨x⟩)
                                        N   /____
                                             i=1
 ```
@@ -173,7 +175,7 @@ Report an additional column in the output file (after C(j)) storing the number o
 
 
 ### -rms
-Report an additional column in the output file (after C(j)) storing the root-mean-squared value of (x(i)-<x>)⋅(x(i+j)-<x>), (considering various values of i, for a given j).*(It is not clear to me whether this quantity is ever useful.)*
+Report an additional column in the output file (after C(j)) storing the root-mean-squared value of (x(i)-⟨x⟩)⋅(x(i+j)-⟨x⟩), (considering various values of i, for a given j).*(It is not clear to me whether this quantity is ever useful.)*
 
 
 ## Compilation
@@ -206,5 +208,5 @@ and then follow the instructions above.
 
 ## License
 
-ndautocrr is available under the terms of the open-source 3-clause BSD
-license.  (See `LICENSE.md`.)
+ndautocrr is available under the terms of the open-source
+[3-clause BSD license](LICENSE.md).

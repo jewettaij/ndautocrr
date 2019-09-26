@@ -279,8 +279,12 @@ private:
     //  L = vC.size()-1;
 
     if (L+1 > vC.size()) {
-      vC.resize(L+1, 0.0);
-      vNumSamples.resize(L+1, 0);
+      // Allocate enough space to store results from the incomming data.
+      size_t size_diff = L+1 - vC.size();
+      vC.insert(vC.end(), size_diff, 0.0);
+      if (report_rms)
+        vCrms.insert(vCrms.end(), size_diff, 0.0);
+      vNumSamples.insert(vNumSamples.end(), size_diff, 0);
     }
     return L;
   } //ChooseL
