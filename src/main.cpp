@@ -227,7 +227,7 @@ main(int argc, char **argv)
 
     L = ndautocrr.size();
  
-    for (size_t j=0; j < L; ++j)
+    for (size_t j=0; j <= L; ++j)
     {
       if (ndautocrr.vNumSamples[j] > 0) {
         cout << j 

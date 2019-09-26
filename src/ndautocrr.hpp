@@ -47,7 +47,7 @@ public:
   vector<size_t> vNumSamples; 
 
   NdAutocrr(Scalar _threshold=-1.01, //!< the value below which vC[j]/vc[0] must fall before it is discarded
-            size_t _L=0, //!< requested size of vC
+            size_t _L=0, //!< _L+1 = the requested size of vC
             bool _is_periodic = false, //!< wrap i+j back into [0,N) when calculating x(i+j)?
             bool _subtract_ave=true, //!< Compute <(x(i)-<x>)*(x(i+j)-<x>)> OR <x(i)*x(i+j)> ?
             bool _report_rms=false //!< Calculate the rms values of (x(i)-<x>)*(x(i+j)-<x>) ?  (probably not useful)
@@ -64,14 +64,18 @@ public:
       // (but do use it to calculate the persistence length).
       persistence_length_threshold = threshold;
       threshold = -1.01;
+      vC.resize(L+1);
+      if (report_rms)
+        vCrms.resize(L+1);
+      vNumSamples.resize(L+1);
     }
   }
 
 
   /// @brief  Return the size of the vC[j] array (or at least the portion
   ///         of which we care about).
-  size_t size() const { assert(L <= vC.size()); return L; }
-  
+  size_t size() const { assert(L+1 == vC.size()); return L; }
+
 
   /// @brief  Accumulate the sums used to calculate the average (vC[j])
   size_t
@@ -203,12 +207,12 @@ public:
   void
   Finalize() {
 
-    assert(L <= vC.size());
+    assert(L+1 <= vC.size());
 
-    if (L < vC.size())
-      vC.resize(L);
-    if (L < vCrms.size())
-      vCrms.resize(L);
+    if (L+1 < vC.size())
+      vC.resize(L+1);
+    if (L+1 < vCrms.size())
+      vCrms.resize(L+1);
 
     for (size_t j=0; j < L; ++j) {
       if (vNumSamples[j] > 0) {
@@ -216,7 +220,7 @@ public:
         double Csqave = 0.0;
         vC[j] = Cave;
         if (report_rms) {
-          assert(L <= vCrms.size());
+          assert(L+1 <= vCrms.size());
           Csqave = vCrms[j] / vNumSamples[j];
           vCrms[j] = Csqave - Cave*Cave;
           if (vCrms[j] < 0.0)
@@ -237,7 +241,7 @@ public:
   Scalar
   Integrate() {
     Scalar integral_of_C = 0.0;
-    assert(L <= vC.size());
+    assert(L+1 <= vC.size());
     for (size_t j=0; j < L; ++j) {
       if ((vNumSamples[j] > 0) && (vC[j] > persistence_length_threshold * vC[0]))
         integral_of_C += vC[j];
@@ -263,8 +267,9 @@ private:
 
   size_t ChooseL(size_t L_single)
   {
+    size_t L_backup = L;
     if (is_periodic) {
-      if ((L < 0) || (L > L_single/2))
+      if ((L <= 0) || (L > L_single/2))
         L = L_single/2; //default value
     }
     else
@@ -278,13 +283,20 @@ private:
     //if ((vC.size() > L+1) && (! is_periodic))
     //  L = vC.size()-1;
 
+    if (L < L_backup)
+      L = L_backup;
+
     if (L+1 > vC.size()) {
       // Allocate enough space to store results from the incomming data.
       size_t size_diff = L+1 - vC.size();
       vC.insert(vC.end(), size_diff, 0.0);
-      if (report_rms)
-        vCrms.insert(vCrms.end(), size_diff, 0.0);
       vNumSamples.insert(vNumSamples.end(), size_diff, 0);
+      assert(L+1 == vC.size());
+      assert(L+1 == vNumSamples.size());
+      if (report_rms) {
+        vCrms.insert(vCrms.end(), size_diff, 0.0);
+        assert(L+1 == vCrms.size());
+      }
     }
     return L;
   } //ChooseL
