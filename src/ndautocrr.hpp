@@ -123,7 +123,7 @@ public:
       // subtract the average value
       for (size_t i=0; i < _vvX_id.size(); ++i)
         for (size_t d=0; d < D; d++)
-        _vvX_id[i][d] - x_ave[d];
+        _vvX_id[i][d] -= x_ave[d];
     }
 
 
