@@ -111,7 +111,7 @@ By default, L is ⌊N/2⌋, where N is the number of entries in the data set
 But you can override this choice and force L 
 to be any number in the range from 0 to N-1.
 A low value of L can speed speed up the program 
-since the running time is O(N\*L).  
+since the running time is O(N\*L) (for a single data set).
 (Note:  If L approaches or exceeds N, a warning message will be generated.)
 
 
@@ -130,8 +130,11 @@ to be expressed as a _fraction_.  Calculation of the
 autocorrelation-function will halt once C(j)/C(0) < threshold.
 Of course, the subsequent calculation of the correlation
 length/time only considers terms C(j) which exceed this threshold.
-NOTE: USE "-t -1" IF YOU WANT TO DISABLE THRESHOLDING BEHAVIOR.
-IN THAT CASE THE DEFAULT VALUE OF L IS N/2.
+
+**Note: Use "-t -1" if you want to disable thresholding behavior.**
+In that case, the default value of L is ⌊N/2⌋, where N is the
+number of entries in the data set (where ⌊⌋ denotes the 
+[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).
 
 
 ### -ave

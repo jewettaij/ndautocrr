@@ -214,7 +214,7 @@ public:
     if (L+1 < vCrms.size())
       vCrms.resize(L+1);
 
-    for (size_t j=0; j < L; ++j) {
+    for (size_t j=0; j < L+1; ++j) {
       if (vNumSamples[j] > 0) {
         double Cave = vC[j] / vNumSamples[j];
         double Csqave = 0.0;
