@@ -171,7 +171,10 @@ public:
       #pragma omp parallel
       {
         #pragma omp for collapse(1)
-        for (size_t j=0; j <= L; ++j)
+        size_t jmax = _vvX_id.size();
+        if (jmax > L)
+          jmax = L;
+        for (size_t j=0; j <= jmax; ++j)
         {
           if (pReportProgress)
             *pReportProgress << "#    processing separation " << j << endl;
@@ -236,7 +239,6 @@ public:
     }
   } //Finalize()
 
-
   /// @brief  Sum all of the entries in vC.  Do this after invoking Finalize()
   Scalar
   Integrate() {
@@ -261,6 +263,13 @@ public:
 
 
 private:
+
+  void Resize(size_t _L) {
+    L = _L;
+    vC.resize(L+1);
+    vCrms.resize(L+1);
+    vNumSamples.resize(L+1);
+  }
 
   /// @brief  Choose the domain of the correlation function
   ///         C(j) is defined from 0 to L-1
@@ -298,6 +307,7 @@ private:
         assert(L+1 == vCrms.size());
       }
     }
+    Resize(L);
     return L;
   } //ChooseL
 
