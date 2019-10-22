@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)]
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]
 
 ndautocrr
 ===========
@@ -211,5 +211,4 @@ and then follow the instructions above.
 
 ## License
 
-ndautocrr is available under the terms of the open-source
-[3-clause BSD license](LICENSE.md).
+ndautocrr is available under the terms of the [MIT license](LICENSE.md).
