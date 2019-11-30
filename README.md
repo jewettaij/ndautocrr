@@ -1,4 +1,7 @@
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]
+[![GitHub repo size](https://img.shields.io/github/repo-size/jewettaij/ndautocrr)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+
+
 
 ndautocrr
 ===========

@@ -1,5 +1,6 @@
-# C extensions
+# compiled binaries
 *.so *.o
+ndautocrr
 
 # text-editor temporary files:
 *~
