@@ -207,7 +207,9 @@ and other build tools using Xcode or brew.)*
 
 Install HyperV (with linux), or the Windows Subsystem for Linux (WSL) and run
 
-    sudo apt-get install build-essential
+```
+sudo apt-get install build-essential
+```
 
 and then follow the instructions above.
 (Older windows users can install Cygwin or MinGW, or linux via virtualbox.)

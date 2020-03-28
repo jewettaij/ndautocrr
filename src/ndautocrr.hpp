@@ -170,10 +170,10 @@ public:
 
       #pragma omp parallel
       {
-        #pragma omp for collapse(1)
         size_t jmax = _vvX_id.size();
         if (jmax > L)
           jmax = L;
+        #pragma omp for collapse(1)
         for (size_t j=0; j <= jmax; ++j)
         {
           if (pReportProgress)
