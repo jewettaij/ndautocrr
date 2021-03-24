@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# This file contains compiler settings that enable the code to run in parallel.
+#
+# WARNING: Although I don't observe any strange behavior now (2021-3-24),
+#          experience has taught me that parallel versions of my code are
+#          more likely to have bugs.  So if you compile the program this
+#          way, please pay attention to the program's output.
+
 export ANSI_C="gcc"
 export ANSI_CPP="g++"
 export L_COMP="ar rs"
