@@ -118,9 +118,10 @@ and/or by using a threshold cutoff ("-t").
 You can manually specify L, the width of the domain of C(j),
 by supplying an integer as one of the command line arguments.
 This integer determines the number of lines in the output file
-(See "L" in output file format above.)  L also determines the
-number of terms that will be used to calculate the correlation
-length/time according to the formula shown above.
+(See "L" in output file format above.)
+If the threshold (-t argument) is unspecified, then
+L also determines the number of terms that will be used
+to calculate the correlation length/time.
 By default, L is determined by the point when C(j)
 decays to 1/e of its original value.
 But you can override this choice and force L 
@@ -143,8 +144,8 @@ The "-t" argument should be followed by a floating point number
 ("threshold"), a number between -1.0 and 1.0. This number is
 to be expressed as a _fraction_.  Calculation of the
 autocorrelation-function will halt once C(j)/C(0) < threshold.
-Of course, the subsequent calculation of the correlation
-length/time only considers terms C(j) which exceed this threshold.
+(The calculation of the correlation length is
+also determined by this choice of threshold.)
 
 
 ### -ave
