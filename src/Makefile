@@ -51,7 +51,7 @@ install:
 	cp -f ndautocrr $(INSTALL_PATH)
 
 clean:
-	rm -f $(GENERATED_FILES)
+	rm -f $(GENERATED_FILES) a.out
 
 distclean:
 	$(MAKE) clean
