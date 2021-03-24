@@ -67,7 +67,7 @@ xN2 yN2 zN2
 
 ```
 ndautocrr [-L domainwidth] [-p] [-t threshold] [-ave,-avezero] \
-          < inputlist.dat > corrfunc.dat
+          < inputlist.txt > corrfunc.txt
 ```
 
 
