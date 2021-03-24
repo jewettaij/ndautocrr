@@ -134,11 +134,17 @@ public:
     if (is_periodic)
     {
 
+      size_t jmax = _vvX_id.size();
+      if (jmax > L)
+        jmax = L;
+
       #pragma omp parallel
       {
         #pragma omp for collapse(1)
-        for (size_t j=0; j <= L; ++j)
+        for (size_t j=0; j <= jmax; ++j)
         {
+          if (j > jmax)
+            continue;
           if (pReportProgress)
             *pReportProgress << "#    processing separation " << j << endl;
           for (size_t i=0; i < _vvX_id.size(); ++i)
@@ -161,11 +167,15 @@ public:
           // If the covariance function is too low, then quit
           if (vC[j] < threshold * vC[0])
           {
-            // This will get us out of the loop, and also
-            // truncate the domain of the covariance function
-            L = j-1;
+            #pragma omp critical
+            {
+              if (j < jmax) {
+                L = j;       //This will truncate the correlation function.
+                jmax=j;      //This will break us out of the loop.
+              }
+            }
           }
-        } //for (size_t j=0; j <= L; ++j)
+        } //for (size_t j=0; j <= jmax; ++j)
       } //#pragma omp parallel
 
     } //if (is_periodic)
