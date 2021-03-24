@@ -172,14 +172,17 @@ public:
     else
     {
 
+      size_t jmax = _vvX_id.size();
+      if (jmax > L)
+        jmax = L;
+
       #pragma omp parallel
       {
-        size_t jmax = _vvX_id.size();
-        if (jmax > L)
-          jmax = L;
         #pragma omp for collapse(1)
         for (size_t j=0; j <= jmax; ++j)
         {
+          if (j > jmax)
+            continue;
           if (pReportProgress)
             *pReportProgress << "#    processing separation " << j << endl;
           for (size_t i=0; i < _vvX_id.size()-j; ++i)
@@ -196,14 +199,21 @@ public:
           // Check for threshold violations.
           // If the covariance function is too low, then quit
           if (vC[j] < threshold * vC[0]) {
-            vC.resize(j+1);  // Stop here.
-            L = vC.size()-1; // Update the L member to the maximum index of vC[]
-            break;
+            #pragma omp critical
+            {
+              if (j < jmax) {
+                L = j;       //This will truncate the correlation function.
+                jmax=j;      //This will break us out of the loop.
+              }
+            }
           }
         } //for (size_t j=0; j <= jmax; ++j)
       } //#pragma omp parallel
 
     } //else clause for "if (is_periodic)"
+
+    if (vC.size() <= L) // if we reduced L, truncate the correlation function
+      vC.resize(L+1);
     return L;
   } //size_t AccumulateSingle()
 
