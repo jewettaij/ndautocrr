@@ -146,12 +146,6 @@ autocorrelation-function will halt once C(j)/C(0) < threshold.
 Of course, the subsequent calculation of the correlation
 length/time only considers terms C(j) which exceed this threshold.
 
-Note: Specifying the **-L** argument will disable thresholding behavior,
-as will using "-t -1".
-*(In the later case, the default value of L is ⌊N/2⌋, where N is the
-number of entries in the data set (where ⌊⌋ denotes the 
-[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).)*
-
 
 ### -ave
 
