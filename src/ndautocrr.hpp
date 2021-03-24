@@ -4,9 +4,9 @@
 
 #ifndef _NDAUTOCRR_HPP
 #define _NDAUTOCRR_HPP
-
 #include <vector>
 #include <cassert>
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include "err.h"
 #include "inner_product.h"
@@ -58,16 +58,20 @@ public:
     subtract_ave(_subtract_ave),
     report_rms(_report_rms)
   {
+    persistence_length_threshold = threshold;
     if (L > 0) {
       // If the user manually specified a domainwidth using the \"-L\" argument
       // then do not use thresholding to make the computation faster
       // (but do use it to calculate the persistence length).
-      persistence_length_threshold = threshold;
       threshold = -1.01;
       vC.resize(L+1);
       if (report_rms)
         vCrms.resize(L+1);
       vNumSamples.resize(L+1);
+    }
+    else if (threshold <= -1.0) {
+      threshold = 1.0 / M_E; //default threshold is 1/e
+      persistence_length_threshold = threshold;
     }
   }
 
@@ -192,9 +196,11 @@ public:
           // Check for threshold violations.
           // If the covariance function is too low, then quit
           if (vC[j] < threshold * vC[0]) {
-            L = j-1;  // This will get us out of the loop
+            vC.resize(j+1);  // Stop here.
+            L = vC.size()-1; // Update the L member to the maximum index of vC[]
+            break;
           }
-        } //for (size_t j=0; j <= L; ++j)
+        } //for (size_t j=0; j <= jmax; ++j)
       } //#pragma omp parallel
 
     } //else clause for "if (is_periodic)"
@@ -244,8 +250,8 @@ public:
   Integrate() {
     Scalar integral_of_C = 0.0;
     assert(L+1 <= vC.size());
-    for (size_t j=0; j < L; ++j) {
-      if ((vNumSamples[j] > 0) && (vC[j] > persistence_length_threshold * vC[0]))
+    for (size_t j=0; j <= L; ++j) {
+      if ((vNumSamples[j] > 0) && (vC[j] > threshold * vC[0]))
         integral_of_C += vC[j];
       else
         break;
@@ -253,13 +259,83 @@ public:
     return integral_of_C;
   }
 
+  /// @brief
+  /// Find the j such that vC[j]/vC[0] drops below "thresh".
+  /// Use linear interpolation to find the fractional j value close to the
+  /// place where the plot of vC[j]/vC[0] drops below that threshold.
+  /// If vC[j]/vC[0] remains above the threshold for all j values, return -1.0.
+  Scalar
+  ThresholdCrossing(Scalar thresh) {
+    assert(L+1 <= vC.size());
+    size_t j_prev = 0;
+    Scalar j_threshold = 0.0;
+    Scalar delta_j = -1.0;
+    for (size_t j=1; j < vC.size(); j++) {
+      if (vNumSamples[j] == 0) //ignore j entries which lack data (if present)
+        continue;
+      if (vC[j] < thresh * vC[0]) {
+        delta_j =
+          (thresh*vC[0] - vC[j_prev])/(vC[j]-vC[j_prev]);
+        break;
+      }
+      j_prev = j;
+    }
+    if (delta_j >= 0.0) {
+      Scalar j_thresh = j_prev + delta_j;
+      return j_thresh;
+    }
+    else return -1.0;
+  }
+
   /// @brief  Calculate the correlation length
   ///     (Note: For time series data, this is called the "correlation time".)
   Scalar
-  CorrelationLength() {
-    Scalar integral_of_C = Integrate();
-    return integral_of_C / vC[0];
-  }
+  GuessCorrelationLength() {
+    // Pick a point along the curve ("j_thresh").
+    // Estimate correlation length by observing how much vC[j_thresh] has
+    // decayed, and fitting this to an exponential decay.
+    Scalar j_thresh = -1.0;
+    Scalar C_thresh = -1.0;
+    if (persistence_length_threshold > -1.0) {
+      // If the "persistence_length_threshold" parameter was specified, then we
+      // set "j_thresh" to the point on the curve that crosses this threshold.
+      j_thresh = ThresholdCrossing(persistence_length_threshold);
+      C_thresh = persistence_length_threshold;
+    }
+
+    // --- Optional: If L was specified, set j_thresh = L ---
+    //else if (L > 0) {
+    //  // If not, then we set "j_thresh" to the last entry in the curve
+    //  j_thresh = L;
+    //  C_thresh = vC[j_thresh];
+    //}
+    // In retrospect, this was a bad idea.  I want to allow the user to
+    // specify extremely large L values.  In that case, it's probably more
+    // accurate to estimate the correlation length using the Integrate() method.
+
+
+    // Now choose which method to use to calculate the persistence length:
+    Scalar persistence_length;
+
+    // If j_thresh and C_thresh are both positive (not pathelogical), then
+    // assume the curve is a decaying exponential.  In that case we can
+    // use j_thresh and C_thresh to estimate the rate of decay.
+    // (The persistence length is one over this rate.)
+    if ((j_thresh > 0.0) && (C_thresh > 0.0)) {
+      persistence_length = -j_thresh / log(C_thresh / vC[0]);
+    }
+    else {
+      // Otherwise, estimate the correlation length from the
+      // integral of the correlation function.
+      // (This is numerically unstable, so do this only as a last resort.)
+      Scalar integral_of_C = Integrate();
+      persistence_length = integral_of_C / vC[0];
+    }
+
+    return persistence_length;
+
+  } //NdAutocrr::GuessCorrelationLength()
+
 
 
 private:

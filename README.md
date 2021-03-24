@@ -76,16 +76,29 @@ ndautocrr [-L domainwidth] [-p] [-t threshold] [-ave,-avezero] \
 
 
 1. *L* is the size of the domain for the auto-correlation function.
-(By default, L is determined automatically.  See the discussion of the
-"-t" argument below.)  However you can manually override this choice
- by using the "-L" argument.  See below.)
+The auto-correlation function is truncated beyond this point.
+You can manually specify this by using the "-L" argument.  (See below.)
+If left unspecified, **by default, the auto-correlation function is truncated
+when it decays below a threshold value (which is 1/e by default)
+relative to the peak at separation 0.**
+(See the discussion of the "-t" argument below.)
 
 2. The data entries *x(i)* can be scalar values or vectors.
 When they are vectors, the
 [dot-product](https://en.wikipedia.org/wiki/Dot_product)
 is used.
 
-3. For convenience, the correlation length (also called the correlation time, *(sum_j C(j)/C(0))* is printed to the standard error:  
+3. For convenience, a crude estimate of the correlation length
+(also called the correlation time) is printed to the standard error.
+If the *-t* threshold argument is specified, the correlation length is
+estimated from the location on the curve where it crosses the threshold.
+If the *-L* argument is specified, the correlation length is estimated
+from the integral of the curve (ie. sum of the entries) between 0 and L.
+*(If both are specified, then the threshold method is preferrentially used.)*
+Neither of these strategies is a robust way to estimate correlation length.
+*(Ideally, the correlation function should fit to a decaying exponential.
+Graphing the correlation function is always a good way to visually verify
+whether this is a good assumption.)*
 
 
 ## Optional arguments
@@ -108,9 +121,8 @@ This integer determines the number of lines in the output file
 (See "L" in output file format above.)  L also determines the
 number of terms that will be used to calculate the correlation
 length/time according to the formula shown above.
-By default, L is ⌊N/2⌋, where N is the number of entries in the data set
-(where ⌊⌋ denotes the 
-[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).
+By default, L is determined by the point when C(j)
+decays to 1/e of its original value.
 But you can override this choice and force L 
 to be any number in the range from 0 to N-1.
 A low value of L can speed speed up the program 
@@ -134,10 +146,11 @@ autocorrelation-function will halt once C(j)/C(0) < threshold.
 Of course, the subsequent calculation of the correlation
 length/time only considers terms C(j) which exceed this threshold.
 
-**Note: Use "-t -1" if you want to disable thresholding behavior.**
-In that case, the default value of L is ⌊N/2⌋, where N is the
+Note: Specifying the **-L** argument will disable thresholding behavior,
+as will using "-t -1".
+*(In the later case, the default value of L is ⌊N/2⌋, where N is the
 number of entries in the data set (where ⌊⌋ denotes the 
-[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).
+[floor function](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions)).)*
 
 
 ### -ave

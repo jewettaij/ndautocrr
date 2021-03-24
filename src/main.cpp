@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <cassert>
+#define _USE_MATH_DEFINES
+#include <cmath>
 using namespace std;
 #include "io.hpp"
 #include "ndautocrr.hpp"
@@ -13,8 +15,8 @@ using namespace std;
 
 // global variables
 const char g_program_name[]   = "ndautocrr";
-const char g_version_string[] = "0.10.0";
-const char g_date_string[]    = "<2019-9-25>";
+const char g_version_string[] = "0.12.0";
+const char g_date_string[]    = "<2021-3-23>";
 const char *g_spaces = " \t"; // whitespace characters (exluding newlines)
 const char *g_spaces_and_newlines = " \t\n";
 
@@ -39,7 +41,7 @@ main(int argc, char **argv)
 
     // Now parse the argument list:
 
-    double threshold = -1.0; //(Any value <= -1.0 will dissable this feature)
+    double threshold = -1.01; //(setting this to a value below -1 disables)
     bool subtract_ave = true;
     bool report_rms = false;
     bool report_nsum = false;
@@ -50,12 +52,13 @@ main(int argc, char **argv)
       long i=1;
       while (i < argc)
       {
-        int ndelete = 1;
+        int ndelete = 0;
         if (strcmp(argv[i], "-L")==0) {
           if ((strlen(argv[i+1]) == 0) || (! isdigit(argv[i+1][0])))
             throw InputErr("Error: Expected a number following the -L flag.\n");
-          else
+          else {
             L = atoi(argv[i+1]);
+          }
           ndelete = 2;
         }
         else if ((strcmp(argv[i], "-p")==0) ||
@@ -94,8 +97,8 @@ main(int argc, char **argv)
         {
           syntax_error_occured = false;
 
-          if ((argc > i+1) && 
-              (isdigit(argv[i+1][0]) || 
+          if ((argc > i+1) &&
+              (isdigit(argv[i+1][0]) ||
                (argv[i+1][0] == '-') ||
                (argv[i+1][0] == '+') ||
                (argv[i+1][0] == '.') ||
@@ -110,7 +113,7 @@ main(int argc, char **argv)
 
           if (syntax_error_occured)
           {
-            cerr << 
+            cerr <<
               "Error: Expected a number between -1.0 and 1.0 following the -t flag.\n";
             if (argc > i+1)
             {
@@ -123,9 +126,9 @@ main(int argc, char **argv)
             }
           }
 
-          cerr << 
-            "Auto-Covariance function will stop before dropping below a threshold.\n"
-            "threshold = " << threshold << " (as a fraction of the value of <(x-<x>)^2>)\n";
+          cerr <<
+            "The correlation function will stop when dropping below a threshold.\n"
+            "threshold = " << threshold << " (relative to the peak at separation 0).\n";
           ndelete = 2;
         }
 
@@ -139,7 +142,6 @@ main(int argc, char **argv)
           i++; //we will deal with unrecongized arguments later
 
       } // while (i < argc)
-
     } // command line argument parsing ends here
 
 
@@ -226,11 +228,11 @@ main(int argc, char **argv)
     cerr << "#----- delta  C(delta) -----\n" << endl;
 
     L = ndautocrr.size();
- 
+
     for (size_t j=0; j <= L; ++j)
     {
       if (ndautocrr.vNumSamples[j] > 0) {
-        cout << j 
+        cout << j
              << " " << ndautocrr.vC[j];
         if (report_rms)
           cout << " " << ndautocrr.vCrms[j];
@@ -241,9 +243,9 @@ main(int argc, char **argv)
     }
 
     // Now print back the corrlation length
-    double correlation_length = ndautocrr.CorrelationLength();
+    double correlation_length = ndautocrr.GuessCorrelationLength();
 
-    cerr << 
+    cerr <<
       "\n"
       "#--------------------------------------\n"
       "# correlation length = " << correlation_length
