@@ -15,8 +15,8 @@ using namespace std;
 
 // global variables
 const char g_program_name[]   = "ndautocrr";
-const char g_version_string[] = "0.11.0";
-const char g_date_string[]    = "<2021-3-23>";
+const char g_version_string[] = "0.12.0";
+const char g_date_string[]    = "<2021-3-24>";
 const char *g_spaces = " \t"; // whitespace characters (exluding newlines)
 const char *g_spaces_and_newlines = " \t\n";
 
