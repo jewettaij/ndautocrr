@@ -2,7 +2,6 @@
 #define CUSTOM_INNER_PRODUCT_H
 
 #include <vector>
-#include <cassert>
 #include <cmath>
 using namespace std;
 
