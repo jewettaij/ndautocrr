@@ -172,7 +172,7 @@ are applied to the data.
 That means *(in the simple case, for a single data set of length N)*
 the autocorrelation function, *C(j)*, is computed this way:
 
-<img src="http://latex.codecogs.com/gif.latex?\large&space;C(j)=\frac{1}{N}\sum_{i=1}^N(x(i)-\langle x\rangle)\cdot(x((i+j)\%N)-\langle x\rangle)"/>
+<img src="http://latex.codecogs.com/gif.latex?\large&space;C(j)=\frac{1}{N}\sum_{i=1}^N(x(i)-\langle x\rangle)\cdot(x((i+j)N)-\langle x\rangle)"/>
 
 Here, "(i+j) % N" denotes the remainder after division by N.
 (N is the number of entries in that data set.)
