@@ -15,7 +15,8 @@ It prints the autorcorrelation function
 
 as a function of j, to the standard output, where ⟨⟩ denotes the
 [average](https://en.wikipedia.org/wiki/Average#Arithmetic_mean),
-and ⋅ denotes multiplication *(either scalar multiplcation or the dot product)*.
+and ⋅ denotes multiplication *(either scalar multiplication or
+the dot product)*.
 
 
 
@@ -95,16 +96,22 @@ When they are vectors, the
 is used.
 
 3. For convenience, a crude estimate of the correlation length
-(also called the correlation time) is printed to the standard error.
-If the *-t* threshold argument is specified, the correlation length is
-estimated from the location on the curve where it crosses the threshold.
-If the *-L* argument is specified, the correlation length is estimated
-from the integral of the curve (ie. sum of the entries) between *0* and *L*.
-*(If both are specified, then the threshold method is preferrentially used.)*
-Neither of these strategies is a robust way to estimate correlation length.
-*(Ideally, the autocorrelation function should fit to a decaying exponential.
-Graphing the autocorrelation function is always a good way to visually verify
-whether this is a good assumption.)*
+(or correlation time) is printed to the standard error.
+-By default, the correlation length is estimated by
+finding the location *j* where $C(j)/C(0)$ crosses *1/e*.
+-If the threshold is adjusted (using the *-t* argument), then the correlation
+length is estimated by fitting the curve to an exponentially decaying function,
+considering only the point where it crosses the user-specified threshold.
+(So if the threshold is set to *1/e^2*, and *C(j)/C(0)=1/e^2*,
+ then the correlation length will be reported as *j/2*.)
+-If the *-L* argument (*L*) is specified, the correlation length is estimated
+by summing *Σ_j C(j)* from j=0 to j=L.
+(Graphing the autocorrelation function is always a good way to choose
+an appropriate "-L" parameter, especially if oscillations are present.)
+-If both are specified, then the threshold method is preferentially used
+*(unless C(j)/C(0) fails to decay enough before j reaches L).*
+There are more robust methods for estimating the correlation length,
+but these methods are the simplest.
 
 
 ## Optional arguments
@@ -123,18 +130,17 @@ and/or by using a threshold cutoff ("-t").
 
 You can manually specify *L*, the width of the domain of *C(j)*,
 by supplying an integer as one of the command line arguments.
-This integer determines the number of lines in the output file
-(See "*L*" in output file format above.)
-If the threshold (-t argument) is unspecified, then
-L also determines the number of terms that will be used
-to calculate the correlation length/time.
+This integer determines where the correlation function *C(j)* is truncated.
+(Values of *C(j)* for *j>L* will not be computed.)
 By default, *L* is determined by the point when *C(j)*
 decays to *1/e* of its original value.
 But you can override this choice and force *L* 
 to be any number in the range from *0* to *N-1*.
-A low value of *L* can speed speed up the program 
-since the running time is *O(N\*L)* (for a single data set).
-(Note: If *L* approaches or exceeds *N*, a warning message will be generated.)
+Note that if "-t" argument is unspecified, then the correlation length
+will be estimated by computing the sum, *Σ_j C(j)* from j=0 to j=L,
+whenever "-L" is used.  *(Due to poor sampling at large L, this method for
+estimating the correlation length can be very sensitive to the choice of L,
+so it is not used by default.)*
 
 
 ### -t threshold

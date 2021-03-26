@@ -6,7 +6,9 @@
 #include <cmath>
 using namespace std;
 
-// Feel free to customize the definition of the inner_product() below.
+// This function is used to multiply entries together (eg. x(i) and x(i+j))
+// whcn computing the correlation function
+// C(j) = ⟨(**x**(i)-⟨**x**⟩)⋅(**x**(i+j)-⟨**x**⟩)⟩
 
 inline double 
 inner_product(const vector<double> &vXa_d,
