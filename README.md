@@ -97,18 +97,18 @@ is used.
 
 3. For convenience, a crude estimate of the correlation length
 (or correlation time) is printed to the standard error.
--By default, the correlation length is estimated by
-finding the location *j* where $C(j)/C(0)$ crosses *1/e*.
--If the threshold is adjusted (using the *-t* argument), then the correlation
+  * By default, the correlation length is estimated by
+finding the location *j* where *C(j)/C(0)* crosses *1/e*.
+  * If the threshold is adjusted (using the *-t* argument), then the correlation
 length is estimated by fitting the curve to an exponentially decaying function,
 considering only the point where it crosses the user-specified threshold.
 (So if the threshold is set to *1/e^2*, and *C(j)/C(0)=1/e^2*,
  then the correlation length will be reported as *j/2*.)
--If the *-L* argument (*L*) is specified, the correlation length is estimated
+  * If the *-L* argument (*L*) is specified, the correlation length is estimated
 by summing *Σ_j C(j)* from j=0 to j=L.
 (Graphing the autocorrelation function is always a good way to choose
 an appropriate "-L" parameter, especially if oscillations are present.)
--If both are specified, then the threshold method is preferentially used
+  * If both are specified, then the threshold method is preferentially used
 *(unless C(j)/C(0) fails to decay enough before j reaches L).*
 There are more robust methods for estimating the correlation length,
 but these methods are the simplest.
