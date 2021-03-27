@@ -106,12 +106,15 @@ considering only the point where it crosses the user-specified threshold.
  then the correlation length will be reported as *j/2*.)
   * If the -L argument (*L*) is specified, the correlation length is estimated
 by summing *Σ_j C(j)* from *j=0* to *j=L*.
-(This is not robust. Graphing the autocorrelation function is always a good way
-to choose an appropriate -L parameter, especially if oscillations are present.)
+*(Graphing the autocorrelation function is always a good way to choose an
+appropriate -L parameter, especially if oscillations in the data are present.
+Alternatively, you can determine L by running the program once with the "-t"
+argument and a suitable threshold, counting the number of lines of output,
+and then running the program again, setting the -L argument to that number.)*
   * If both -L and -t are specified, the threshold method is preferentially used
 *(unless C(j)/C(0) fails to decay enough before j reaches L).*
 
-There are more robust methods for estimating the correlation length,
+There are much more robust methods for estimating the correlation length,
 but these methods are the simplest.
 
 
