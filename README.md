@@ -212,18 +212,14 @@ root-mean-squared value of (**x**(i)-⟨**x**⟩)⋅(**x**(i+j)-⟨**x**⟩),
 
 ```
 cd src
-source setup_gcc.sh
+source setup_gcc.sh   #(Apple users may prefer using "setup_clang.sh" instead.)
 make
 ```
 
 *(Note:  If you are not using the bash shell,
 enter "bash" into the terminal beforehand.)*
 
-*(Note: Apple users will need to install the gcc compiler
-and other build tools using Xcode or brew.)*
-
-*(Note: If you receive an error regarding "omp" or "OpenMP", then use
-"setup_gcc_serial.sh" instead.  This may be necessary for apple users.)*
+*(Note: Apple users can install Xcode, which includes the clang compiler by default.  Alternatively, brew can be used to install a wide range of compilers and build tools.)*
 
 ## Windows 10:
 
